@@ -42,9 +42,28 @@ class ArchiveController extends Controller
         return response()->download(storage_path('app/public/'.$path->location));;
     }
 
-    public function delete_archive($id)
+    public function delete_archive($id, Request $request)
     {
-        
+
+        $file = \App\File::find($id);
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('files_access')->where('file_id', $id)->delete();
+
+            \App\File::where('id', $id)->delete();
+
+            DB::commit();
+
+            Storage::disk('public')->delete($file->location);
+        } catch (Exception $e) {
+            DB::rollBack();
+            echo 'Message : '.$e->getMessage();
+            die();
+        }
+
+        return redirect()->route($request->input('redirect'));
     }
 
     public function view($id)

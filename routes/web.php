@@ -131,3 +131,7 @@ Route::get('/getFile', function () {
 Route::get('/storage/Archives/{id}', function ($id) {
 	return $id;
 });
+
+Route::get('/test-modal', function () {
+	return view('layouts.modal_delete');
+});
