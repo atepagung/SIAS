@@ -16,5 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call(UsersTableSeeder::class);
         $this->call(File_CategoriesTableSeeder::class);
         $this->call(Ket_Surat_KeluarTableSeeder::class);
+        $this->call(Mail_categoriesTableSeeder::class);
+        $this->call(MailsTableSeeder::class);
+        $this->call(Mail_historiesTableSeeder::class);
     }
 }

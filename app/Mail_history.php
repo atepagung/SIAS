@@ -15,12 +15,12 @@ class Mail_history extends Model
     	return $this->belongsTo('App\Mail', 'mail_id');
     }
 
-    public function pengirim()
+    public function user_pengirim()
     {
     	return $this->belongsTo('App\User', 'pengirim');
     }
 
-    public function penerima()
+    public function user_penerima()
     {
     	return $this->belongsTo('App\User', 'penerima');
     }

@@ -19,15 +19,15 @@ class CreateMailHistoriesTable extends Migration
             $table->string('note');
             $table->integer('pengirim')->unsigned();
             $table->integer('penerima')->unsigned();
-            $table->integer('notif')->unsigned();
-            $table->integer('hapus')->unsigned();
-            $table->integer('read')->unsigned();
-            $table->integer('mark')->unsigned();
+            $table->integer('notif')->unsigned()->default(0);
+            $table->integer('hapus')->unsigned()->default(0);
+            $table->integer('read')->unsigned()->default(0);
+            $table->integer('mark')->unsigned()->default(0);
             $table->timestamps();
 
-            $table->foreign('mail_id')->references('id')->on('mails');
-            $table->foreign('pengirim')->references('id')->on('users');
-            $table->foreign('penerima')->references('id')->on('users');
+            //$table->foreign('mail_id')->references('id')->on('mails');
+            //$table->foreign('pengirim')->references('id')->on('users');
+            //$table->foreign('penerima')->references('id')->on('users');
         });
     }
 

@@ -11,30 +11,16 @@ use Illuminate\Support\Facades\Auth;
 class ArchiveController extends Controller
 {
 
-    public function create_surat_keluar()
+    /*public function create_surat_keluar()
     {
         $penerima = \App\Role::with('sub_roles')->with('sub_roles.users')->get();
 
         $file_category = \App\File_category::all();
 
         //dd($penerima->toArray());
-        //
+        
         return view('archives.new-archive');
-    }
-
-    public function show($id)
-    {
-    	
-    	if (DB::table('files_access')->where('user_id', Auth::id())->where('file_id', $id)->exists()) {
-    		//User tidak memiliki akses
-    		//redirect
-    		die();
-    	}
-    	
-    	$archive = \App\File::with('uploader')->with('file_category')->where('file_id', $id)->get()->toArray();
-
-    	dd($archive);
-    }
+    }*/
 
     public function download_archive($id)
     {
@@ -59,8 +45,9 @@ class ArchiveController extends Controller
             Storage::disk('public')->delete($file->location);
         } catch (Exception $e) {
             DB::rollBack();
-            echo 'Message : '.$e->getMessage();
-            die();
+            //echo 'Message : '.$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
         }
 
         return redirect()->route($request->input('redirect'));
@@ -70,7 +57,7 @@ class ArchiveController extends Controller
     {
         $archive = \App\File::find($id);
 
-        return view('archives.view-archive', ['archive' => $archive]);
+        return view('archives.view-archive', ['archive' => $archive, 'title' => 'Arsip']);
     }
 
 }

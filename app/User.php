@@ -48,4 +48,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\File', 'uploader');
     }
+
+    public function mails()
+    {
+        return $this->hasMany('App\Mail', 'from');
+    }
 }

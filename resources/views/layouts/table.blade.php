@@ -38,6 +38,9 @@
                         <a href="{{ url('archive/surat-masuk').'/'.$archive['id'].'/edit' }}" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></a>
                     </div>
                     <div class="col">
+                        <a href="{{ url('mail/create').'/'.$archive['id'] }}" class="btn btn-info btn-sm" title="Send"><i class="fa fa-send"></i></a>
+                    </div>
+                    <div class="col">
                         <!-- <a href="{{ url('archive/delete'.'/'.$archive['id']) }}" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-remove"></i></a> -->
                         <a class="btn btn-danger btn-sm" title="Delete" onclick="open_modal({{$archive['id']}}, '{{ $red }}')"><i class="fa fa-remove"></i></a>
                     </div>
@@ -51,5 +54,5 @@
 </div>
 
 @if($archives != NULL)
-  @include('layouts.modal_delete')
+  @include('layouts.modal_delete', ['action_delete' => url('archive/delete').'/', 'object' => 'file'])
 @endif

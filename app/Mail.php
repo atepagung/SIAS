@@ -24,4 +24,9 @@ class Mail extends Model
     {
     	return $this->belongsTo('App\Mail_category', 'mail_category_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'from');
+    }
 }

@@ -24,7 +24,7 @@
 <div class="container">
     <div class="content">
         <div class="title m-b-md">
-            Maaf Anda Tidak Memiliki Hak Akses Terhadap File Ini, Silahkan Hubungi Admin!
+            {{ $pesan_error }}
         </div>
     </div>
 </div>

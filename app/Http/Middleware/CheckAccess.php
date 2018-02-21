@@ -20,9 +20,14 @@ class CheckAccess
     {
 
         $hak_akses = DB::table('files_access')->where('user_id', Auth::id())->where('file_id', $request->route()->parameter('id'))->get();
+
+        $role = Auth::user()->sub_role->title;
         
-        if ($hak_akses->count() == 0) {
-            return redirect()->route('err_access');
+        if ($role != 'Administrator') {
+            if ($hak_akses->count() == 0) {
+                $request->session()->flash('pesan_error', 'Maaf Anda Tidak Memiliki Hak Akses Terhadap File Ini, Silahkan Hubungi Admin!');
+                return redirect()->route('err_access');
+            }
         }
 
         return $next($request);

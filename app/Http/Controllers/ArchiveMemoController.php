@@ -12,15 +12,20 @@ class ArchiveMemoController extends Controller
 {
     public function memo()
     {
-        $memos = \App\File::with('uploader')->whereExists(function($query) {
-                $query->select(DB::raw(1))
-                    ->from('files_access')
-                    ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-            })->where('file_category_id', '2')->get();
+
+        if (Auth::user()->sub_role->title == 'Administrator') {
+            $memos = \App\File::with('uploader')->where('file_category_id', '2')->get();            
+        }else {
+            $memos = \App\File::with('uploader')->whereExists(function($query) {
+                    $query->select(DB::raw(1))
+                        ->from('files_access')
+                        ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
+                })->where('file_category_id', '2')->get();
+        }
 
         //dd($archives);
 
-        return view('archives.list-memo', ['memos' => $memos->toArray()]);
+        return view('archives.list-memo', ['memos' => $memos->toArray(), 'title' => 'Memo']);
     }
 
     public function create_memo()
@@ -31,7 +36,7 @@ class ArchiveMemoController extends Controller
 
     	//dd($penerima->toArray());
     	
-    	return view('archives.add-memo', ['penerima' => $penerima, 'file_category' => $file_category]);
+    	return view('archives.add-memo', ['penerima' => $penerima, 'file_category' => $file_category, 'title' => 'Memo']);
     }
 
     public function store_memo(Request $request)
@@ -64,7 +69,6 @@ class ArchiveMemoController extends Controller
             \App\File_access::firstOrCreate(['user_id' => Auth::id(), 'file_id' => $file->id]);
 
     		foreach ($request->input('hak_akses') as $user) {
-    			
                 \App\File_access::firstOrCreate(['user_id' => $user, 'file_id' => $file->id]);
     		}
 
@@ -72,7 +76,9 @@ class ArchiveMemoController extends Controller
     	} catch (Exception $e) {
     		DB::rollBack();
     		Storage::disk('public')->delete($path);
-            echo 'Message : '.$e->getMessage();
+            //echo 'Message : '.$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
     	}
 
         return redirect()->route('memo');
@@ -82,7 +88,7 @@ class ArchiveMemoController extends Controller
     {
         $archive = \App\File::find($id);
 
-        return view('archives.edit-memo', ['archive' => $archive]);
+        return view('archives.edit-memo', ['archive' => $archive, 'title' => 'Memo']);
     }
 
     public function update($id, Request $request)
@@ -105,7 +111,9 @@ class ArchiveMemoController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            echo "Message : ".$e->getMessage();
+            //echo "Message : ".$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
         }
         return redirect()->route('memo');
     }

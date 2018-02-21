@@ -6,7 +6,9 @@
     <div class="card mb-3">
       <div class="card-header row">
         <div class="col-11">
-            <i class="fa fa-table"></i> Arsip Memo
+            @if(isset($title))
+              <i class="fa fa-table"></i> <span id="title">{{ $title }}</span>
+            @endif
         </div>
         <div class="col-1">
             <a href="memo/add" class="btn btn-primary btn-sm">+</a>    

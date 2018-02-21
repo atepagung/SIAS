@@ -20,7 +20,7 @@ class CreateMailsTable extends Migration
             $table->integer('mail_category_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('mail_category_id')->references('id')->on('mail_categories');
+            //$table->foreign('mail_category_id')->references('id')->on('mail_categories');
         });
     }
 

@@ -12,27 +12,35 @@ class ArchiveKeluarController extends Controller
 {
     public function surat_keluar()
     {
-        $lengkap = \App\File::with('uploader')->whereExists(function($query) {
-                $query->select(DB::raw(1))
-                    ->from('files_access')
-                    ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-            })->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->get();
+        if (Auth::user()->sub_role->title == 'Administrator') {
+            $lengkap = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->get();
 
-        $nomor = \App\File::with('uploader')->whereExists(function($query) {
-                $query->select(DB::raw(1))
-                    ->from('files_access')
-                    ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-            })->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->get();
+            $nomor = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->get();
 
-        $review = \App\File::with('uploader')->whereExists(function($query) {
-                $query->select(DB::raw(1))
-                    ->from('files_access')
-                    ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-            })->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->get();
+            $review = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->get();    
+        }else {
+            $lengkap = \App\File::with('uploader')->whereExists(function($query) {
+                    $query->select(DB::raw(1))
+                        ->from('files_access')
+                        ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->get();
+
+            $nomor = \App\File::with('uploader')->whereExists(function($query) {
+                    $query->select(DB::raw(1))
+                        ->from('files_access')
+                        ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->get();
+
+            $review = \App\File::with('uploader')->whereExists(function($query) {
+                    $query->select(DB::raw(1))
+                        ->from('files_access')
+                        ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->get();
+        }
 
         //dd($review->toArray());
 
-        return view('archives.list-surat-keluar', ['lengkap' => $lengkap->toArray(), 'nomor' => $nomor->toArray(), 'review' => $review->toArray()]);
+        return view('archives.list-surat-keluar', ['lengkap' => $lengkap->toArray(), 'nomor' => $nomor->toArray(), 'review' => $review->toArray(), 'title' => 'Arsip Keluar']);
     }
 
     public function create_surat_keluar()
@@ -45,7 +53,7 @@ class ArchiveKeluarController extends Controller
 
     	//dd($penerima->toArray());
     	
-    	return view('archives.add-surat-keluar', ['penerima' => $penerima, 'ket_surat_keluar' => $ket_surat_keluar]);
+    	return view('archives.add-surat-keluar', ['penerima' => $penerima, 'ket_surat_keluar' => $ket_surat_keluar, 'title' => 'Arsip Keluar']);
     }
 
     public function store_surat_keluar(Request $request)
@@ -91,7 +99,9 @@ class ArchiveKeluarController extends Controller
     	} catch (Exception $e) {
     		DB::rollBack();
     		Storage::disk('public')->delete($path);
-            echo 'Message : '.$e->getMessage();
+            //echo 'Message : '.$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
     	}
 
         return redirect()->route('surat-keluar');
@@ -101,7 +111,7 @@ class ArchiveKeluarController extends Controller
     {
         $archive = \App\File::find($id);
 
-        return view('archives.edit-surat-keluar', ['archive' => $archive]);
+        return view('archives.edit-surat-keluar', ['archive' => $archive, 'title' => 'Surat Keluar']);
     }
 
     public function update($id, Request $request)
@@ -123,7 +133,9 @@ class ArchiveKeluarController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            echo "Message : ".$e->getMessage();
+            //echo "Message : ".$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
         }
         return redirect()->route('surat-keluar');
     }

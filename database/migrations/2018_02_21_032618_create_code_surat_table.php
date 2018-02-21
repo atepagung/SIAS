@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSubRolesTable extends Migration
+class CreateCodeSuratTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,11 @@ class CreateSubRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('sub_roles', function (Blueprint $table) {
+        Schema::create('code_surat', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->integer('role_id')->unsigned();
+            $table->string('code');
+            $table->string('judul_naskah');
             $table->timestamps();
-
-            //$table->foreign('role_id')->references('id')->on('roles');
         });
     }
 
@@ -30,6 +28,6 @@ class CreateSubRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sub_roles');
+        Schema::dropIfExists('code_surat');
     }
 }

@@ -13,15 +13,20 @@ class ArchiveMasukController extends Controller
 {
     public function surat_masuk()
     {
-        $archives = \App\File::with('uploader')->whereExists(function($query) {
-                $query->select(DB::raw(1))
-                    ->from('files_access')
-                    ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-            })->where('file_category_id', '1')->get();
+
+        if (Auth::user()->sub_role->title == 'Administrator') {
+            $archives = \App\File::with('uploader')->where('file_category_id', '1')->get();            
+        }else {
+            $archives = \App\File::with('uploader')->whereExists(function($query) {
+                    $query->select(DB::raw(1))
+                        ->from('files_access')
+                        ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
+                })->where('file_category_id', '1')->get();
+        }
 
         //dd($archives);
 
-        return view('archives.list-surat-masuk', ['archives' => $archives->toArray()]);
+        return view('archives.list-surat-masuk', ['archives' => $archives->toArray(), 'title' => 'Arsip Masuk']);
     }
 
     public function create_surat_masuk()
@@ -32,7 +37,7 @@ class ArchiveMasukController extends Controller
 
     	//dd($penerima->toArray());
     	
-    	return view('archives.add-surat-masuk', ['penerima' => $penerima, 'file_category' => $file_category]);
+    	return view('archives.add-surat-masuk', ['penerima' => $penerima, 'file_category' => $file_category, 'title' => 'Arsip Masuk']);
     }
 
     public function store_surat_masuk(Request $request)
@@ -73,7 +78,9 @@ class ArchiveMasukController extends Controller
     	} catch (Exception $e) {
     		DB::rollBack();
     		Storage::disk('public')->delete($path);
-            echo 'Message : '.$e->getMessage();
+            //echo 'Message : '.$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
     	}
 
         return redirect()->route('surat-masuk');
@@ -84,7 +91,7 @@ class ArchiveMasukController extends Controller
         $archive = \App\File::find($id);
 
 
-        return view('archives.edit-surat-masuk', ['archive' => $archive]);
+        return view('archives.edit-surat-masuk', ['archive' => $archive, 'title' => 'Arsip Masuk']);
     }
 
     public function update($id, Request $request)
@@ -107,7 +114,9 @@ class ArchiveMasukController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            echo "Message : ".$e->getMessage();
+            //echo "Message : ".$e->getMessage();
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
         }
         return redirect()->route('surat-masuk');
     }

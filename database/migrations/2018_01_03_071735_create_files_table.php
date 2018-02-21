@@ -24,9 +24,9 @@ class CreateFilesTable extends Migration
             $table->text('description');
             $table->timestamps();
 
-            $table->foreign('file_category_id')->references('id')->on('file_categories');
-            $table->foreign('uploader')->references('id')->on('users');
-            $table->foreign('ket_surat_keluar_id')->references('id')->on('ket_surat_keluar');
+            //$table->foreign('file_category_id')->references('id')->on('file_categories');
+            //$table->foreign('uploader')->references('id')->on('users');
+            //$table->foreign('ket_surat_keluar_id')->references('id')->on('ket_surat_keluar');
         });
     }
 

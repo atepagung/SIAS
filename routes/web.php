@@ -19,109 +19,101 @@ Route::get('/', 'HomeController@index');
 
 Auth::routes();
 
-Route::get('/logout' , 'Auth\LoginController@logout');
+Route::get('regis', function() {
+	return view('regis');
+})->name('regis');
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/logout' , 'Auth\LoginController@logout')->name('logout')->middleware('auth', 'checkRole');
 
-Route::prefix('inbox')->group(function() {
+Route::get('/home', 'HomeController@index')->name('home')->middleware('auth', 'checkRole');
+
+/*Route::prefix('inbox')->group(function() {
 	Route::get('/', 'InboxController@index'); //lihat semua inbox
 	Route::get('/sorting', 'InboxController@sort'); //sorting mail
 	Route::get('/search', 'InboxController@search'); //search mail
-});
+});*/
 
-Route::prefix('outbox')->group(function() {
+/*Route::prefix('outbox')->group(function() {
 	Route::get('/', 'OutboxController@index'); //lihat semua outbox
 	Route::get('/sorting', 'OutboxController@sort'); //sorting mail
 	Route::get('/search', 'OutboxController@search'); //search mail
-});
+});*/
 
 Route::prefix('mail')->group(function() {
-	Route::get('/create', 'MailController@createMail'); //menampilkan page send mail
-	Route::post('/', function() { return "haha"; }); //send mail
-	Route::delete('/', 'MailController@deleteSomeMail'); //hapus mail
-	Route::get('/mark', 'MailController@markSomeMail'); //mark mail
-	Route::get('/unmark', 'MailController@unmarkSomeMail'); //unmark mail
-	Route::delete('/{id}', 'MailController@deleteMail'); //hapus mail spesifik
-	Route::get('/{id}', function() { return "haha"; }); //lihat detail mail
-	Route::get('/{id}/reply', function() { return "haha"; }); //menampilkan page balas mail
-	Route::post('/{id}/reply', function() { return "haha"; }); //balas mail
-	Route::get('/{id}/forward', function() { return "haha"; }); //menampilkan page forward mail
-	Route::post('/{id}/forward', function() { return "haha"; }); //forward mail
+	Route::get('/create', 'MailController@createMail')->middleware('auth', 'checkRole'); //menampilkan page send mail
+	Route::get('/create/{id}', 'MailController@createFileMail')->middleware('auth', 'checkRole'); //menampilkan page send File mail
+	Route::post('/', 'MailController@sendMail')->middleware('auth', 'checkRole'); //send mail
+	Route::get('/pesan-masuk', 'MailController@pesan_masuk')->middleware('auth', 'checkRole'); //pesan masuk
+	Route::get('/pesan-keluar', 'MailController@pesan_keluar')->name('pesan-keluar')->middleware('auth', 'checkRole'); //pesan keluar
+	Route::get('/detail-mail/{id}', 'MailController@detailMail')->middleware('auth', 'checkRole'); //menampilkan page detail mail
+	//Route::delete('/', 'MailController@deleteSomeMail'); //hapus mail
+	//Route::get('/mark', 'MailController@markSomeMail'); //mark mail
+	//Route::get('/unmark', 'MailController@unmarkSomeMail'); //unmark mail
+	//Route::delete('/{id}', 'MailController@deleteMail'); //hapus mail spesifik
+	//Route::get('/reply/{id}', 'MailController@reply'); //menampilkan page balas mail
+	//Route::post('/reply/{id}', 'MailController@store_reply'); //balas mail
 });
 
 Route::prefix('archive')->group(function() {
-	//Route::get('/add/surat-keluar', 'ArchiveController@create_surat_keluar'); //menampilkan page tambah arsip surat keluar
-	//Route::get('/add/memo', 'ArchiveController@create_memo'); //menampilkan page tambah arsip memo
-	//Route::post('/memo', 'ArchiveController@store_surat_masuk'); //menambah arsip
-	Route::get('/search', function() { return "haha"; }); //searching arsip
-	//Route::get('/{id}', 'ArchiveController@show'); //melihat detail arsip
-	//Route::get('/{id}/edit', function() { return "haha"; }); //menampilkan page edit arsip
-	//Route::patch('/{id}', function() { return "haha"; }); //edit arsip
-	Route::delete('/delete/{id}', 'ArchiveController@delete_archive')->middleware('checkAccess'); //menghapus arsip
-	Route::get('/download/{id}', 'ArchiveController@download_archive')->middleware('checkAccess'); //download arsip
-	Route::get('view/{id}', 'ArchiveController@view')->middleware('checkAccess');
+	Route::delete('/delete/{id}', 'ArchiveController@delete_archive')->middleware('checkAccess', 'auth', 'checkRole'); //menghapus arsip
+	Route::get('/download/{id}', 'ArchiveController@download_archive')->middleware('checkAccess', 'auth', 'checkRole'); //download arsip
+	Route::get('view/{id}', 'ArchiveController@view')->middleware('checkAccess', 'auth', 'checkRole');
 });
 
 Route::prefix('archive/surat-masuk')->group(function() {
-	Route::get('/', 'ArchiveMasukController@surat_masuk')->name('surat-masuk'); //lihat semua arsip
-	Route::get('/add', 'ArchiveMasukController@create_surat_masuk'); //menampilkan page tambah arsip surat masuk
-	Route::post('/', 'ArchiveMasukController@store_surat_masuk'); //menambah arsip
-	Route::get('/search', function() { return "haha"; }); //searching arsip
-	Route::get('/{id}/edit', 'ArchiveMasukController@edit')->middleware('checkAccess'); //menampilkan page edit arsip
-	Route::patch('/{id}', 'ArchiveMasukController@update')->middleware('checkAccess'); //edit arsip
-	//Route::delete('/{id}', function() { return "haha"; }); //menghapus arsip
+	Route::get('/', 'ArchiveMasukController@surat_masuk')->name('surat-masuk')->middleware('auth', 'checkRole'); //lihat semua arsip
+	Route::get('/add', 'ArchiveMasukController@create_surat_masuk')->middleware('auth', 'checkRole'); //menampilkan page tambah arsip surat masuk
+	Route::post('/', 'ArchiveMasukController@store_surat_masuk')->middleware('auth', 'checkRole'); //menambah arsip
+	Route::get('/{id}/edit', 'ArchiveMasukController@edit')->middleware('checkAccess', 'auth', 'checkRole'); //menampilkan page edit arsip
+	Route::patch('/{id}', 'ArchiveMasukController@update')->middleware('checkAccess', 'auth', 'checkRole'); //edit arsip
 });
 
 Route::prefix('archive/surat-keluar')->group(function() {
-	Route::get('/', 'ArchiveKeluarController@surat_keluar')->name('surat-keluar'); //lihat semua arsip
-	Route::get('/add', 'ArchiveKeluarController@create_surat_keluar'); //menampilkan page tambah arsip surat masuk
-	Route::post('/', 'ArchiveKeluarController@store_surat_keluar'); //menambah arsip
-	Route::get('/search', function() { return "haha"; }); //searching arsip
-	Route::get('/{id}/edit', 'ArchiveKeluarController@edit')->middleware('checkAccess'); //menampilkan page edit arsip
-	Route::patch('/{id}', 'ArchiveKeluarController@update')->middleware('checkAccess'); //edit arsip
-	//Route::delete('/{id}', function() { return "haha"; }); //menghapus arsip
+	Route::get('/', 'ArchiveKeluarController@surat_keluar')->name('surat-keluar')->middleware('auth', 'checkRole'); //lihat semua arsip
+	Route::get('/add', 'ArchiveKeluarController@create_surat_keluar')->middleware('auth', 'checkRole'); //menampilkan page tambah arsip surat masuk
+	Route::post('/', 'ArchiveKeluarController@store_surat_keluar')->middleware('auth', 'checkRole'); //menambah arsip
+	Route::get('/{id}/edit', 'ArchiveKeluarController@edit')->middleware('checkAccess', 'auth', 'checkRole'); //menampilkan page edit arsip
+	Route::patch('/{id}', 'ArchiveKeluarController@update')->middleware('checkAccess', 'auth', 'checkRole'); //edit arsip
 });
 
 Route::prefix('archive/memo')->group(function() {
-	Route::get('/', 'ArchiveMemoController@memo')->name('memo'); //lihat semua arsip
-	Route::get('/add', 'ArchiveMemoController@create_memo'); //menampilkan page tambah arsip surat masuk
-	Route::post('/', 'ArchiveMemoController@store_memo'); //menambah arsip
-	Route::get('/search', function() { return "haha"; }); //searching arsip
-	Route::get('/{id}/edit', 'ArchiveMemoController@edit')->middleware('checkAccess'); //menampilkan page edit arsip
-	Route::patch('/{id}', 'ArchiveMemoController@update')->middleware('checkAccess'); //edit arsip
-	//Route::delete('/{id}', function() { return "haha"; }); //menghapus arsip
+	Route::get('/', 'ArchiveMemoController@memo')->name('memo')->middleware('auth', 'checkRole'); //lihat semua arsip
+	Route::get('/add', 'ArchiveMemoController@create_memo')->middleware('auth', 'checkRole'); //menampilkan page tambah arsip surat masuk
+	Route::post('/', 'ArchiveMemoController@store_memo')->middleware('auth', 'checkRole'); //menambah arsip
+	Route::get('/{id}/edit', 'ArchiveMemoController@edit')->middleware('checkAccess', 'auth', 'checkRole'); //menampilkan page edit arsip
+	Route::patch('/{id}', 'ArchiveMemoController@update')->middleware('checkAccess', 'auth', 'checkRole'); //edit arsip
 });
 
 Route::prefix('admin')->group(function() {
-	Route::get('/', 'ArchiveMemo@index'); //lihat semua arsip
-	Route::get('/add', 'ArchiveController@create'); //menampilkan page tambah arsip
-	Route::post('/', 'ArchiveController@store'); //menambah arsip
-	Route::get('/search', function() { return "haha"; }); //searching arsip
-	Route::get('/{id}', 'ArchiveController@show'); //melihat detail arsip
-	Route::get('/{id}/edit', function() { return "haha"; }); //menampilkan page edit arsip
-	Route::patch('/{id}', function() { return "haha"; }); //edit arsip
-	Route::delete('/{id}', function() { return "haha"; }); //menghapus arsip
-	Route::get('/{id}/download', function() { return "haha"; }); //download arsip
+	Route::get('/users', 'AdminController@show_users')->name('users')->middleware('auth', 'checkRole'); //lihat semua user
+	Route::get('/change-role/{id}', 'AdminController@edit_role')->middleware('auth', 'checkRole'); //view change role
+	Route::patch('/update-role/{id}', 'AdminController@update_role')->middleware('auth', 'checkRole'); //update role
+	Route::patch('/update-password/{id}', 'AdminController@update_password')->middleware('auth', 'checkRole'); //update password
+	Route::delete('/delete/{id}', 'AdminController@delete_user')->middleware('auth', 'checkRole'); //delete user
+	Route::get('/view-roles', 'AdminController@view_roles')->middleware('auth', 'checkRole'); //view change role
+	Route::get('/view-sub-roles', 'AdminController@view_sub_roles')->middleware('auth', 'checkRole'); //view change role
 });
 
-Route::get('err', function () {
-	return view('archives.error-akses-file');
-})->name('err_access');
-
+Route::prefix('kode-surat')->group(function() {
+	Route::get('all', 'CodeSuratController@index')->name('code-surat')->middleware('auth', 'checkRole');
+	Route::get('add', 'CodeSuratController@add')->middleware('auth', 'checkRole');
+	Route::post('add', 'CodeSuratController@store')->middleware('auth', 'checkRole');
+	Route::get('edit/{id}', 'CodeSuratController@edit')->middleware('auth', 'checkRole');
+	Route::patch('edit/{id}', 'CodeSuratController@update')->middleware('auth', 'checkRole');
+	Route::delete('delete/{id}', 'CodeSuratController@destroy')->middleware('auth', 'checkRole');
+});
 
 use Illuminate\Http\Request;
+
+Route::get('err', function (Request $request) {
+	return view('archives.error-akses-file', ['pesan_error' => $request->session()->get('pesan_error'), 'title' => 'Pesan Error']);
+})->name('err_access');
 
 Route::get('/testing', function() { return view('testing.testing_file_up'); }); //testing
 Route::post('/testing', function(Request $request) { 
 	$waw = $request->input('waha');
 	return dd($waw['file']);
 }); //testing
-
-Route::get('/testing-penerima', function () {
-	$penerima = \App\Role::with('sub_roles')->with('sub_roles.users')->get();
-
-	dd($penerima->toArray());
-});
 
 Route::get('/getFile', function () {
 	return asset('storage/Archives/a.jpg');
