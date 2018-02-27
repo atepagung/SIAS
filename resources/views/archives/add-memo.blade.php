@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <form class="form-horizontal" method="POST" action="/archive/memo" enctype="multipart/form-data">
+    <form class="form-horizontal" method="POST" action="{{ url('/archive/memo') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="form-group{{ $errors->has('nomor_surat') ? ' has-error' : '' }}">

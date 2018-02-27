@@ -11,15 +11,15 @@ class File_CategoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('file_categories')->insert([
+        \App\File_category::create([
             'title' => 'Surat Masuk',
         ]);
 
-        DB::table('file_categories')->insert([
+        \App\File_category::create([
             'title' => 'Memo',
         ]);
 
-        DB::table('file_categories')->insert([
+        \App\File_category::create([
             'title' => 'Surat Keluar',
         ]);
     }

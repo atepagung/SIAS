@@ -102,4 +102,60 @@ class AdminController extends Controller
 
         return view('admin.show-sub-roles', ['sub_roles' => $sub_roles, 'title' => 'Sub_Role']);
     }
+
+    public function create_role()
+    {
+        return view('admin.create-role');
+    }
+
+    public function store_role(Request $request)
+    {
+        $validatedData = $request->validate([
+            'role' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            \App\Role::create(['title' => $request->input('role')]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
+        }
+
+        return redirect()->route('roles');
+    }
+
+    public function create_sub_role()
+    {
+        $roles = \App\Role::all();
+        return view('admin.create-sub-role', ['roles' => $roles]);
+    }
+
+    public function store_sub_role(Request $request)
+    {
+        $validatedData = $request->validate([
+            'role' => 'required',
+            'sub_role' => 'required'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            \App\Sub_role::create(['title' => $request->input('sub_role'), 'role_id' => $request->input('role')]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollback();
+
+            $request->session()->flash('pesan_error', $e->getMessage());
+            return redirect()->route('err_access');
+        }
+
+        return redirect()->route('sub_roles');
+    }
 }

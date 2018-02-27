@@ -17,7 +17,7 @@ class CreateMailsTable extends Migration
             $table->increments('id');
             $table->string('from');
             $table->string('subject');
-            $table->integer('mail_category_id')->unsigned();
+            //$table->integer('mail_category_id')->unsigned();
             $table->timestamps();
 
             //$table->foreign('mail_category_id')->references('id')->on('mail_categories');

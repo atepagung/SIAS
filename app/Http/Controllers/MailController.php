@@ -10,92 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class MailController extends Controller
 {
-    /*public function deleteSomeMail(Request $request)
-    {
-    	try {
-    		DB::beginTransaction();
-
-    		foreach ($request->input('mail') as $mail_id) {
-    			\App\Mail_history::where('mail_id', $mail_id)
-    				->where(function($query) {
-    					$query->where('pengirim', Auth::id())->orWhere('penerima', Auth::id());
-    				})->update(['hapus' => 1]);
-    		}
-
-    		DB::commit();
-    	} catch (Exception $e) {
-    		DB::rollBack();
-    		//echo 'Message : '.$e->getMessage();
-            $request->session()->flash('pesan_error', $e->getMessage());
-            return redirect()->route('err_access');
-    	}
-
-    	die();
-    }*/
-
-    /*public function markSomeMail(Request $request)
-    {
-    	try {
-    		DB::beginTransaction();
-
-			foreach ($request->input('mail') as $mail_id) {
-    			\App\Mail_history::where('mail_id', $mail_id)
-    				->where(function($query) {
-    					$query->where('pengirim', Auth::id())->orWhere('penerima', Auth::id());
-    				})->update(['mark' => 1]);
-    		}    		
-
-    		DB::commit();
-    	} catch (Exception $e) {
-    		DB::rollBack();
-    		//echo "Message : ".$e->getMessage();
-            $request->session()->flash('pesan_error', $e->getMessage());
-            return redirect()->route('err_access');
-    	}
-    }*/
-
-    /*public function unmarkSomeMail(Request $request)
-    {
-    	try {
-    		DB::beginTransaction();
-
-			foreach ($request->input('mail') as $mail_id) {
-    			\App\Mail_history::where('mail_id', $mail_id)
-    				->where(function($query) {
-    					$query->where('pengirim', Auth::id())->orWhere('penerima', Auth::id());
-    				})->update(['mark' => 0]);
-    		}    		
-
-    		DB::commit();
-    	} catch (Exception $e) {
-    		DB::rollBack();
-    		//echo "Message : ".$e->getMessage();
-            $request->session()->flash('pesan_error', $e->getMessage());
-            return redirect()->route('err_access');
-    	}
-    }*/
-
-    /*public function deleteMail($id)
-    {
-    	try {
-    		DB::beginTransaction();
-
-    		\App\Mail_history::where('mail_id', $id)
-    			->where(function($query) {
-    				$query->where('pengirim', Auth::id())->orWhere('penerima', Auth::id());
-    			})->update(['hapus' => 1]);
-
-    		DB::commit();
-    	} catch (Exception $e) {
-    		DB::rollBack();
-    		//echo 'Message : '.$e->getMessage();
-            $request->session()->flash('pesan_error', $e->getMessage());
-            return redirect()->route('err_access');
-    	}
-
-    	die();
-    }*/
-
     public function createMail()
     {
     	$penerima = \App\Role::with('sub_roles')->with('sub_roles.users')->get();
@@ -132,17 +46,17 @@ class MailController extends Controller
     	try {
     		DB::beginTransaction();
 
-    		$id = $mail_id = \App\Mail::insertGetId([
+    		$id = \App\Mail::create([
     			'from' => Auth::id(),
     			'subject' => $request->input('subject'),
-    			'mail_category_id' => $request->input('mail_category')
+    			//'mail_category_id' => 1
     		]);
 
 
 
     		foreach ($request->input('penerima') as $penerima) {
-				\App\Mail_history::insert([
-					'mail_id' => $mail_id,
+				\App\Mail_history::create([
+					'mail_id' => $id->id,
 					'note' => $request->input('isi_pesan'),
 					'pengirim' => Auth::id(),
 					'penerima' => $penerima
@@ -152,9 +66,13 @@ class MailController extends Controller
                     foreach ($request->input('fileInput') as $file_id) {
                         \App\File_access::firstOrCreate(['user_id' => $penerima, 'file_id' => $file_id]);
 
-                        $file_mail = \App\Mail::find($id);
+                        try {
+                            $file_mail = \App\Mail::find($id->id);
 
-                        $file_mail->files()->attach($file_id);
+                            $file_mail->files()->attach($file_id);    
+                        } catch (Exception $e) {
+                            
+                        }
                     }
                 }
     		}
@@ -171,7 +89,7 @@ class MailController extends Controller
 
     public function pesan_masuk()
     {
-        $mails = \App\Mail::with('user')->with('mail_histories')->whereExists(function ($query) {
+        $mails = \App\Mail::with('user')->with('mail_histories')->with('files')->whereExists(function ($query) {
             $query->select(DB::raw(1))->from('mail_histories')->whereRaw('mail_histories.penerima = '.Auth::id().' AND mail_histories.mail_id = mails.id');
         })->get();
 
@@ -182,7 +100,7 @@ class MailController extends Controller
 
     public function pesan_keluar()
     {
-        $mails = \App\Mail::with('user')->with('mail_histories')->with('mail_histories.user_penerima')->whereExists(function ($query) {
+        $mails = \App\Mail::with('user')->with('mail_histories')->with('mail_histories.user_penerima')->with('files')->whereExists(function ($query) {
             $query->select(DB::raw(1))->from('mail_histories')->whereRaw('mail_histories.pengirim = '.Auth::id().' AND mail_histories.mail_id = mails.id');
         })->where('from', Auth::id())->get();
         //dd($mails->toArray());

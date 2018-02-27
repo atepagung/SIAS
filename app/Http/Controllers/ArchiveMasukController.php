@@ -15,13 +15,13 @@ class ArchiveMasukController extends Controller
     {
 
         if (Auth::user()->sub_role->title == 'Administrator') {
-            $archives = \App\File::with('uploader')->where('file_category_id', '1')->get();            
+            $archives = \App\File::with('uploader')->where('file_category_id', '1')->orderBy('created_at', 'desc')->get();            
         }else {
             $archives = \App\File::with('uploader')->whereExists(function($query) {
                     $query->select(DB::raw(1))
                         ->from('files_access')
                         ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-                })->where('file_category_id', '1')->get();
+                })->where('file_category_id', '1')->orderBy('created_at', 'desc')->get();
         }
 
         //dd($archives);

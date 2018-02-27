@@ -25,4 +25,9 @@ class HomeController extends Controller
     {
         return view('home', ['title' => 'AGD DKI JAKARTA']);
     }
+
+    public function regis()
+    {
+        return view('regis');
+    }
 }

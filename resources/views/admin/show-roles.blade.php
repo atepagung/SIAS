@@ -15,6 +15,9 @@
             <i class="fa fa-table"></i> <span id="title">{{ $title }}</span>
           @endif
         </div>
+        <div class="col-1">
+            <a href="{{ url('admin/create-role') }}" class="btn btn-primary btn-sm">+</a>    
+        </div>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -41,9 +44,9 @@
                           <div class="col">
                               <a href="{{ url('admin/change-role').'/'.$role['id'] }}" class="btn btn-primary btn-sm"  title="Edit Role"><i class="fa fa-edit"></i></a>
                           </div>
-                          <div class="col">
+                          <!-- <div class="col">
                               <a class="btn btn-danger btn-sm" title="Delete" onclick="open_modal({{$role['id']}}, 'roles')"><i class="fa fa-remove"></i></a>
-                          </div>
+                          </div> -->
                         @endif
                       </div>
                   </td>
@@ -54,9 +57,9 @@
         </div>
       </div>
 
-      @if($roles != NULL)
-        @include('layouts.modal_delete', ['archive' => $roles, 'action_delete' => url('admin/delete').'/', 'object' => 'role'])
-      @endif
+      <!-- @if($roles != NULL)
+        @include('layouts.modal_delete', ['archive' => $roles, 'action_delete' => url('admin/delete-role').'/', 'object' => 'role'])
+      @endif -->
       <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
 </div>

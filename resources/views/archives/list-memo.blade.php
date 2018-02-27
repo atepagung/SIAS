@@ -11,7 +11,7 @@
             @endif
         </div>
         <div class="col-1">
-            <a href="memo/add" class="btn btn-primary btn-sm">+</a>    
+            <a href="{{ url('archive/memo/add') }}" class="btn btn-primary btn-sm">+</a>    
         </div>
       </div>
       @include('layouts.table', ['archives' => $memos, 'red' => 'memo'])

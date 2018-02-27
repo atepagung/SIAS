@@ -18,7 +18,7 @@
                         <i class="fa fa-table"></i> Lengkap
                     </div>
                     <div class="col-1">
-                        <a href="surat-keluar/add" class="btn btn-primary btn-sm">+</a>    
+                        <a href="{{ url('archive/surat-keluar/add') }}" class="btn btn-primary btn-sm">+</a>    
                     </div>
                   </div>
                   @include('layouts.table', ['archives' => $lengkap, 'red' => 'surat-keluar'])
@@ -33,7 +33,7 @@
                     <i class="fa fa-table"></i> Butuh Nomor
                 </div>
                 <div class="col-1">
-                    <a href="surat-keluar/add" class="btn btn-primary btn-sm">+</a>    
+                    <a href="{{ url('archive/surat-keluar/add') }}" class="btn btn-primary btn-sm">+</a>    
                 </div>
               </div>
               @include('layouts.table', ['archives' => $nomor, 'red' => 'surat-keluar'])
@@ -48,7 +48,7 @@
                         <i class="fa fa-table"></i> Review
                     </div>
                     <div class="col-1">
-                        <a href="surat-keluar/add" class="btn btn-primary btn-sm">+</a>    
+                        <a href="{{ url('archive/surat-keluar/add') }}" class="btn btn-primary btn-sm">+</a>    
                     </div>
                   </div>
                   @include('layouts.table', ['archives' => $review, 'red' => 'surat-keluar'])

@@ -24,6 +24,7 @@
                 <th>Pengirim</th>
                 <th>Subject</th>
                 <th>Isi</th>
+                <th>Files</th>
                 <th>Option</th>
               </tr>
             </thead>
@@ -32,6 +33,7 @@
                 <th>Pengirim</th>
                 <th>Subject</th>
                 <th>Isi</th>
+                <th>Files</th>
                 <th>Option</th>
               </tr>
             </tfoot>
@@ -41,6 +43,15 @@
                   <td>{{ $mail['user']['name'] }}</td>
                   <td>{{ $mail['subject'] }}</td>
                   <td>{{ $mail['mail_histories'][count($mail['mail_histories'])-1]['note'] }}</td>
+                  <td>
+                    <div class="row">
+                      @foreach($mail->files as $files)
+                        <div class="col">
+                            <a href="{{ url('archive/download').'/'.$files['id'] }}" class="btn btn-success btn-sm" title="Download"><i class="fa fa-download"></i></a>
+                        </div>
+                      @endforeach
+                    </div>
+                  </td>
                   <td>
                       <div class="row">
                         

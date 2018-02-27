@@ -11,14 +11,14 @@ class Mail_historiesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('mail_histories')->insert([
+        \App\Mail_history::create([
             'mail_id' => '1',
             'note' => 'note note note',
             'pengirim' => 1,
             'penerima' => 2,
         ]);
 
-        DB::table('mail_histories')->insert([
+        \App\Mail_history::create([
             'mail_id' => '1',
             'note' => 'note note note',
             'pengirim' => 1,

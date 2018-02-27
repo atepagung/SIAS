@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
 
-    <form class="form-horizontal" method="POST" action="/archive/surat-masuk/{{ $archive->id }}" enctype="multipart/form-data">
+    <form class="form-horizontal" method="POST" action="{{ url('/archive/surat-masuk').'/'.$archive->id }}" enctype="multipart/form-data">
         {{ csrf_field() }}
         {{ method_field('PATCH') }}
 

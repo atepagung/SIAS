@@ -11,15 +11,15 @@ class Ket_Surat_KeluarTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('ket_surat_keluar')->insert([
+        \App\Ket_surat_keluar::create([
             'title' => 'lengkap',
         ]);
 
-        DB::table('ket_surat_keluar')->insert([
+        \App\Ket_surat_keluar::create([
             'title' => 'butuh nomor',
         ]);
 
-        DB::table('ket_surat_keluar')->insert([
+        \App\Ket_surat_keluar::create([
             'title' => 'review',
         ]);
     }

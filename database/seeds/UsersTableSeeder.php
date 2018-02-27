@@ -11,14 +11,14 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
+        \App\User::create([
         	'username' => 'administrator',
         	'password' => bcrypt('admin'),
             'name' => 'Admin',
             'sub_role_id' => '2',
         ]);
 
-        DB::table('users')->insert([
+        \App\User::create([
             'username' => 'user1',
             'password' => bcrypt('user1'),
             'name' => 'user1',

@@ -15,6 +15,9 @@
             <i class="fa fa-table"></i> <span id="title">{{ $title }}</span>
           @endif
         </div>
+        <div class="col-1">
+            <a href="{{ url('admin/create-sub-role') }}" class="btn btn-primary btn-sm">+</a>    
+        </div>
       </div>
       <div class="card-body">
         <div class="table-responsive">
@@ -44,9 +47,9 @@
                           <div class="col">
                               <a href="{{ url('admin/change-sub_role').'/'.$sub_role['id'] }}" class="btn btn-primary btn-sm"  title="Edit sub_role"><i class="fa fa-edit"></i></a>
                           </div>
-                          <div class="col">
+                          <!-- <div class="col">
                               <a class="btn btn-danger btn-sm" title="Delete" onclick="open_modal({{$sub_role['id']}}, 'sub_roles')"><i class="fa fa-remove"></i></a>
-                          </div>
+                          </div> -->
                         @endif
                       </div>
                   </td>
@@ -57,9 +60,9 @@
         </div>
       </div>
 
-      @if($sub_roles != NULL)
-        @include('layouts.modal_delete', ['archive' => $sub_roles, 'action_delete' => url('admin/delete').'/', 'object' => 'sub role'])
-      @endif
+      <!-- @if($sub_roles != NULL)
+        @include('layouts.modal_delete', ['archive' => $sub_roles, 'action_delete' => url('admin/delete-sub-role').'/', 'object' => 'sub role'])
+      @endif -->
       <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
 </div>

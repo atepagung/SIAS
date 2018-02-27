@@ -45,13 +45,13 @@
           </a>
           <ul class="sidenav-second-level collapse" id="archiveComponents">
             <li>
-              <a href="/archive/surat-masuk">Surat Masuk</a>
+              <a href="{{ url('/archive/surat-masuk') }}">Surat Masuk</a>
             </li>
             <li>
-              <a href="/archive/surat-keluar">Surat Keluar</a>
+              <a href="{{ url('/archive/surat-keluar') }}">Surat Keluar</a>
             </li>
             <li>
-              <a href="/archive/memo">Memo</a>
+              <a href="{{ url('/archive/memo') }}">Memo</a>
             </li>
           </ul>
         </li>

@@ -11,13 +11,13 @@ class Sub_RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('sub_roles')->insert([
+        \App\Sub_role::create([
         	'id' => '1',
             'title' => 'No Role',
             'role_id' => '1',
         ]);
 
-        DB::table('sub_roles')->insert([
+        \App\Sub_role::create([
         	'id' => '2',
             'title' => 'Administrator',
             'role_id' => '2',

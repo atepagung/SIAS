@@ -11,11 +11,11 @@ class MailsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('mails')->insert([
+        \App\Mail::create([
         	'id' => 1,
             'from' => '1',
             'subject' => 'Testing Mail',
-            'mail_category_id' => 1
+            //'mail_category_id' => 1
         ]);
     }
 }

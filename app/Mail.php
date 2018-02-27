@@ -8,7 +8,7 @@ class Mail extends Model
 {
     protected $table = 'mails';
 
-    protected $fillable = ['from', 'subject', 'mail_category_id'];
+    protected $fillable = ['from', 'subject'];
 
     public function files()
     {

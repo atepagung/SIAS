@@ -11,12 +11,12 @@ class Mail_categoriesTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('mail_categories')->insert([
+        \App\Mail_category::create([
         	'id' => '1',
             'title' => 'Pesan Masuk',
         ]);
 
-        DB::table('mail_categories')->insert([
+        \App\Mail_category::create([
         	'id' => '2',
             'title' => 'Pesan Keluar',
         ]);

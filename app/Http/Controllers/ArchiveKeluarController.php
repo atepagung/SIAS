@@ -13,29 +13,29 @@ class ArchiveKeluarController extends Controller
     public function surat_keluar()
     {
         if (Auth::user()->sub_role->title == 'Administrator') {
-            $lengkap = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->get();
+            $lengkap = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->orderBy('created_at', 'desc')->get();
 
-            $nomor = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->get();
+            $nomor = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->orderBy('created_at', 'desc')->get();
 
-            $review = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->get();    
+            $review = \App\File::with('uploader')->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->orderBy('created_at', 'desc')->get();    
         }else {
             $lengkap = \App\File::with('uploader')->whereExists(function($query) {
                     $query->select(DB::raw(1))
                         ->from('files_access')
                         ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->get();
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '1')->orderBy('created_at', 'desc')->get();
 
             $nomor = \App\File::with('uploader')->whereExists(function($query) {
                     $query->select(DB::raw(1))
                         ->from('files_access')
                         ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->get();
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '2')->orderBy('created_at', 'desc')->get();
 
             $review = \App\File::with('uploader')->whereExists(function($query) {
                     $query->select(DB::raw(1))
                         ->from('files_access')
                         ->whereRaw('files_access.user_id = '.Auth::id().' AND files_access.file_id = files.id');
-                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->get();
+                })->where('file_category_id', '3')->where('ket_surat_keluar_id', '3')->orderBy('created_at', 'desc')->get();
         }
 
         //dd($review->toArray());

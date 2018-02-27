@@ -32,7 +32,7 @@
                         <a href="{{ url('archive/view').'/'.$archive['id'] }}" class="btn btn-primary btn-sm" target="_blank" title="Open"><i class="fa fa-external-link"></i></a>
                     </div>
                     <div class="col">
-                        <a href="download/{{ $archive['id'] }}" class="btn btn-success btn-sm" title="Download"><i class="fa fa-download"></i></a>
+                        <a href="{{ url('archive/download').'/'.$archive['id'] }}" class="btn btn-success btn-sm" title="Download"><i class="fa fa-download"></i></a>
                     </div>
                     <div class="col">
                         <a href="{{ url('archive/surat-masuk').'/'.$archive['id'].'/edit' }}" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></a>
